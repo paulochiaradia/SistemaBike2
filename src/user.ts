@@ -1,21 +1,20 @@
+import crypto from "crypto";
 export class User {
     private constructor(
         public nome: string,
         public email: string,
         public password: string,
-        public id: string
+        public id: string = crypto.randomUUID()
     ) {}
-    static create(nome: string, email: string, password: string, id: string) {
+    static create(nome: string, email: string, password: string) {
         if(!User.isValidEmail(email)){
             throw new Error("Email must be a valid email")
         }
         if(!User.isValidPassword(password)){
             throw new Error("Password must be a valid password")
         }
-        if(!User.isValidId(id)){
-            throw new Error("Id must be a valid id")
-        }
-        return new User(nome, email, password, id)
+        
+        return new User(nome, email, password, crypto.randomUUID())
     }
 
     static isValidEmail(email: string): boolean {
@@ -28,16 +27,4 @@ export class User {
         return constainsNumber;
     }
 
-    static isValidId(id: string): boolean {
-        id = id.replace(/\D/g, '');
-
-        if (id.length !== 11) {
-            return false;
-        }
-
-        if (/^(\d)\1+$/.test(id)) { 
-            return false;
-        }
-        return true;
-    }
 }

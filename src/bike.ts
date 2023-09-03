@@ -1,3 +1,4 @@
+import crypto from "crypto";
 export class Bike{
     constructor(
         public name:string,
@@ -8,6 +9,6 @@ export class Bike{
         public description:string,
         public rating:number,
         public imgUrls:string[],
-        public id:number
+        public id:string = crypto.randomUUID()
     ){}
 }

@@ -6,24 +6,32 @@ export class App{
     public rents:Rent[] = []
     public users:User[] = []
     public bikes:Bike[] = []
+   // registerbike
+    //removeuser
+    //rentbike
+    //ruturnbike
 
-    addUser(user:User): void {
+    registerUser(user:User): string {
         for(const rUser of this.users) {
             if(rUser.id === user.id) {throw new Error("User already exists")}
         }
         this.users.push(user);
+        return user.id
     }
 
-    addBikes(bike:Bike): void {
+    registerBike(bike:Bike): string {
         for(const rBike of this.bikes) {
             if(rBike.id === bike.id) {throw new Error("Bike already exists")}
         }
         this.bikes.push(bike);
+        return bike.id
     }
 
-    addRent(rent:Rent): void {
-        //nao consegui pensar nessa logica certa ainda
-        this.rents.push(rent);
+    addRent(bikeid:string, startDate:Date, endDate:Date, userid:string): void {
+        const bike:Bike = this.findBikeById(bikeid)
+        const user:User = this.findUserById(userid)
+        const rentBike:Rent[]=this.rents.filter(rent =>rent.bike===bike)
+        Rent.create(rentBike,bike,user,startDate,endDate)
     }
 
     
@@ -66,14 +74,18 @@ export class App{
         return this.users.find(user => user.email === email)
     }
 
-    findBikeById(id:number): Bike | undefined {
+    findUserById(id:string): User | undefined {
+        return this.users.find(user => user.id === id)
+    }
+
+    findBikeById(id:string): Bike | undefined {
         return this.bikes.find(bike => bike.id === id)
     }
  
     findRentByStartDate(startDate:Date): Rent | undefined {
         return this.rents.find(rent =>rent.dateFrom === startDate)
     }
-    findRentByBikeId(bikeId:number): Rent|undefined {
+    findRentByBikeId(bikeId:string): Rent|undefined {
         return this.rents.find(rent =>rent.bike.id === bikeId)
     }
 
@@ -100,6 +112,9 @@ export class App{
 
     getAllRents():Rent[] {
         return this.rents
-    }
+
+
+ 
+       
 }
-    
+
