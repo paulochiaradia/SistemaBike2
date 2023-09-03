@@ -10,6 +10,7 @@ export class App{
     //removeuser
     //rentbike
     //ruturnbike
+    //getallrents
 
     registerUser(user:User): string {
         for(const rUser of this.users) {
