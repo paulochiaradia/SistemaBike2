@@ -7,18 +7,15 @@ const app = new app_1.App();
 const bike1 = new bike_1.Bike("Caloi", "Normal", 29, 150, 10, "teste", 40, []);
 const user1 = user_1.User.create("Paulo", "paulo@gmail.com", "teste1");
 const user2 = user_1.User.create("Teste", "teste@gmail.com", "teste12121");
-console.log(user1.id);
-console.log(bike1.id);
+//const user3 = User.create("Paulo121423", "paulo@gmail.com", "teste1")
 app.registerUser(user1);
 app.registerUser(user2);
-const usuarios = app.getAllUsers();
-console.log(usuarios);
-const find = app.findUserById(user1.id);
-console.log(find);
-app.deleteUserByEmail(user1.email);
-const find1 = app.findUserById(user1.id);
-console.log(find1);
-const usuarios1 = app.getAllUsers();
-console.log(usuarios1);
-app.returnBike(bike1, Date.now());
-console.log(bike1);
+//app.registerUser(user3)
+app.registerBike(bike1);
+app.removeUser(user1.email);
+app.getAllUsers();
+app.rentBike(bike1, new Date("2021-10-10"), new Date("2021-10-20"), user1);
+//app.rentBike(bike1, new Date("2021-10-10"), new Date("2021-10-20"), user1)
+app.returnDateBike(bike1.id, new Date("2021-10-30"));
+app.getBikes();
+app.getAllRents();

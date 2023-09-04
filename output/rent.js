@@ -12,7 +12,7 @@ class Rent {
     static create(rents, bike, user, startDate, endDate) {
         const canCreate = Rent.carRent(rents, startDate, endDate, bike.id);
         if (canCreate)
-            return new Rent(bike, user, startDate, endDate);
+            return new Rent(bike, user, startDate, endDate, null);
         throw new Error("Overlapping");
     }
     static carRent(rents, startDate, endDate, id) {
