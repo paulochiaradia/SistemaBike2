@@ -14,8 +14,13 @@ app.registerUser(user2);
 app.registerBike(bike1);
 app.removeUser(user1.email);
 app.getAllUsers();
-app.rentBike(bike1, new Date("2021-10-10"), new Date("2021-10-20"), user1);
-//app.rentBike(bike1, new Date("2021-10-10"), new Date("2021-10-20"), user1)
+try {
+    app.rentBike(bike1, new Date("2021-10-10"), new Date("2021-10-20"), user1);
+    app.rentBike(bike1, new Date("2021-10-15"), new Date("2021-10-20"), user2);
+}
+catch (err) {
+    console.log("An error occurred: ", err);
+}
 app.returnDateBike(bike1.id, new Date("2021-10-30"));
 app.getBikes();
 app.getAllRents();

@@ -12,7 +12,7 @@ export class App {
     //ruturnbike
     //getallrents
 
-    //getUserById  buscar um usuário pelo id
+    //getUserByEmail  buscar um usuário pelo id
     getUserByEmail(email: string): User | undefined {
         return this.users.find((user) => user.email === email)
     }
@@ -22,7 +22,7 @@ export class App {
         return this.bikes.find((bike) => bike.id === id)
     }
 
-    //registerBike  cadastrar uma bike
+    //registerUser cadastrar um usuário
     registerUser(user: User): void {
         const existeUser = this.getUserByEmail(user.email)
         if (existeUser) {

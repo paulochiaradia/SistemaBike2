@@ -12,7 +12,8 @@ class App {
     //removeuser
     //rentbike
     //ruturnbike
-    //getUserById  buscar um usuário pelo id
+    //getallrents
+    //getUserByEmail  buscar um usuário pelo id
     getUserByEmail(email) {
         return this.users.find((user) => user.email === email);
     }
@@ -20,7 +21,7 @@ class App {
     getBikeById(id) {
         return this.bikes.find((bike) => bike.id === id);
     }
-    //registerBike  cadastrar uma bike
+    //registerUser cadastrar um usuário
     registerUser(user) {
         const existeUser = this.getUserByEmail(user.email);
         if (existeUser) {
