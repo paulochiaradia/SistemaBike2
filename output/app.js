@@ -8,104 +8,88 @@ class App {
         this.users = [];
         this.bikes = [];
     }
-    // registerbike
+    //registerbike
     //removeuser
     //rentbike
     //ruturnbike
+    //getUserById  buscar um usuário pelo id
+    getUserByEmail(email) {
+        return this.users.find((user) => user.email === email);
+    }
+    //getBikeById  buscar uma bike pelo id
+    getBikeById(id) {
+        return this.bikes.find((bike) => bike.id === id);
+    }
+    //registerBike  cadastrar uma bike
     registerUser(user) {
-        for (const rUser of this.users) {
-            if (rUser.id === user.id) {
-                throw new Error("User already exists");
-            }
+        const existeUser = this.getUserByEmail(user.email);
+        if (existeUser) {
+            throw new Error("Usuario já cadastrado");
         }
-        this.users.push(user);
-        return user.id;
+        else {
+            this.users.push(user);
+        }
     }
+    //registerBike  cadastrar uma bike
     registerBike(bike) {
-        for (const rBike of this.bikes) {
-            if (rBike.id === bike.id) {
-                throw new Error("Bike already exists");
+        const existeBike = this.getBikeById(bike.id);
+        if (existeBike) {
+            throw new Error("Bike já cadastrada");
+        }
+        else {
+            this.bikes.push(bike);
+        }
+    }
+    //removeUser  remover um usuário
+    removeUser(email) {
+        const user = this.getUserByEmail(email);
+        if (user) {
+            const index = this.users.indexOf(user);
+            this.users.splice(index, 1);
+        }
+        else {
+            throw new Error("Usuario não encontrado");
+        }
+    }
+    //rentBike  cadastrar um aluguel de bike
+    rentBike(bike, dateFrom, dateTo, user) {
+        const overlappingRent = this.rents.find(rent => rent.bike === bike &&
+            (dateFrom <= rent.dateTo && dateTo >= rent.dateFrom));
+        if (overlappingRent) {
+            throw new Error("Aluguel já cadastrado");
+        }
+        else {
+            const newRent = rent_1.Rent.create(this.rents, bike, user, dateFrom, dateTo);
+            this.rents.push(newRent);
+        }
+    }
+    //returnDateBike  atualizar a data de retorno da bike, cadastrada inicialmento como 0
+    returnDateBike(id, dateReturned) {
+        const bike = this.getBikeById(id);
+        if (bike) {
+            const rent = this.rents.find((rent) => rent.bike === bike);
+            if (rent) {
+                rent.dateReturned = dateReturned;
+            }
+            else {
+                throw new Error("Aluguel não encontrado");
             }
         }
-        this.bikes.push(bike);
-        return bike.id;
-    }
-    addRent(bikeid, startDate, endDate, userid) {
-        const bike = this.findBikeById(bikeid);
-        const user = this.findUserById(userid);
-        const rentBike = this.rents.filter(rent => rent.bike === bike);
-        rent_1.Rent.create(rentBike, bike, user, startDate, endDate);
-    }
-    deleteUser(user) {
-        const userIndex = this.users.indexOf(user);
-        if (userIndex !== -1) {
-            this.users.splice(userIndex, 1);
+        else {
+            throw new Error("Bike não encontrada");
         }
     }
-    deleteUserByEmail(email) {
-        const userIndex = this.users.findIndex(user => user.email === email);
-        if (userIndex !== -1) {
-            this.users.splice(userIndex, 1);
-        }
-    }
-    deleteBike(bike) {
-        const bikeIndex = this.bikes.indexOf(bike);
-        if (bikeIndex !== -1) {
-            this.bikes.splice(bikeIndex, 1);
-        }
-    }
-    deleteBikeById(bike) {
-        const bikeIndex = this.bikes.findIndex(bike => bike.id === bike.id);
-        if (bikeIndex !== -1) {
-            this.bikes.splice(bikeIndex, 1);
-        }
-    }
-    deleteRent(rent) {
-        const rentIndex = this.rents.indexOf(rent);
-        if (rentIndex !== -1) {
-            this.rents.splice(rentIndex, 1);
-        }
-    }
-    findUserByEmail(email) {
-        return this.users.find(user => user.email === email);
-    }
-    findUserById(id) {
-        return this.users.find(user => user.id === id);
-    }
-    findBikeById(id) {
-        return this.bikes.find(bike => bike.id === id);
-    }
-    findRentByStartDate(startDate) {
-        return this.rents.find(rent => rent.dateFrom === startDate);
-    }
-    findRentByBikeId(bikeId) {
-        return this.rents.find(rent => rent.bike.id === bikeId);
-    }
-    getActiveRents() {
-        const currentDate = new Date();
-        return this.rents.filter(rent => rent.dateFrom <= currentDate && currentDate <= rent.dateTo);
-    }
-    getBikesRents(bike) {
-        return this.rents.filter(rent => rent.bike === bike);
-    }
-    getUsersRents(user) {
-        return this.rents.filter(rent => rent.user === user);
-    }
-    getAllUsers() {
-        return this.users;
-    }
-    getAllBikes() {
-        return this.bikes;
-    }
+    //getAllRents  listar todos os alugueis
     getAllRents() {
-        return this.rents;
+        console.log(this.rents);
     }
-    returnBike(bike, date) {
-        for (const rent of this.rents) {
-            if (rent.bike === bike) {
-                rent.dateReturned = date;
-            }
-        }
+    //getAllUsers  listar todos os usuários
+    getAllUsers() {
+        console.log(this.users);
+    }
+    //getAllBikes  listar todas as bikes
+    getBikes() {
+        console.log(this.bikes);
     }
 }
 exports.App = App;

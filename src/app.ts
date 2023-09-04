@@ -2,120 +2,108 @@ import { Bike } from "./bike";
 import { Rent } from "./rent";
 import { User } from "./user";
 
-export class App{
-    public rents:Rent[] = []
-    public users:User[] = []
-    public bikes:Bike[] = []
-   // registerbike
+export class App {
+    public rents: Rent[] = []
+    public users: User[] = []
+    public bikes: Bike[] = []
+    //registerbike
     //removeuser
     //rentbike
     //ruturnbike
     //getallrents
 
-    registerUser(user:User): string {
-        for(const rUser of this.users) {
-            if(rUser.id === user.id) {throw new Error("User already exists")}
-        }
-        this.users.push(user);
-        return user.id
+    //getUserById  buscar um usuário pelo id
+    getUserByEmail(email: string): User | undefined {
+        return this.users.find((user) => user.email === email)
     }
 
-    registerBike(bike:Bike): string {
-        for(const rBike of this.bikes) {
-            if(rBike.id === bike.id) {throw new Error("Bike already exists")}
-        }
-        this.bikes.push(bike);
-        return bike.id
+    //getBikeById  buscar uma bike pelo id
+    getBikeById(id: string): Bike | undefined {
+        return this.bikes.find((bike) => bike.id === id)
     }
 
-    addRent(bikeid:string, startDate:Date, endDate:Date, userid:string): void {
-        const bike:Bike = this.findBikeById(bikeid)
-        const user:User = this.findUserById(userid)
-        const rentBike:Rent[]=this.rents.filter(rent =>rent.bike===bike)
-        Rent.create(rentBike,bike,user,startDate,endDate)
-    }
-
-    
-    deleteUser(user:User):void{
-        const userIndex = this.users.indexOf(user);
-        if(userIndex !== -1){
-            this.users.splice(userIndex, 1);
+    //registerBike  cadastrar uma bike
+    registerUser(user: User): void {
+        const existeUser = this.getUserByEmail(user.email)
+        if (existeUser) {
+            throw new Error("Usuario já cadastrado")
+        } else {
+            this.users.push(user)
         }
     }
 
-    deleteUserByEmail(email:string):void{
-        const userIndex = this.users.findIndex(user => user.email === email);
-        if(userIndex !== -1){
-            this.users.splice(userIndex, 1);
+    //registerBike  cadastrar uma bike
+    registerBike(bike: Bike): void {
+        const existeBike = this.getBikeById(bike.id)
+        if (existeBike) {
+            throw new Error("Bike já cadastrada")
+        } else {
+            this.bikes.push(bike)
         }
     }
 
-    deleteBike(bike:Bike):void{
-        const bikeIndex = this.bikes.indexOf(bike);
-        if(bikeIndex !== -1){
-            this.bikes.splice(bikeIndex, 1);
+    //removeUser  remover um usuário
+    removeUser(email: string): void {
+        const user = this.getUserByEmail(email)
+        if (user) {
+            const index = this.users.indexOf(user)
+            this.users.splice(index, 1)
+        } else {
+            throw new Error("Usuario não encontrado")
         }
     }
 
-    deleteBikeById(bike:Bike):void{
-        const bikeIndex = this.bikes.findIndex(bike=>bike.id === bike.id);
-        if(bikeIndex !== -1){
-            this.bikes.splice(bikeIndex, 1);
+    //rentBike  cadastrar um aluguel de bike
+    rentBike(bike: Bike, dateFrom: Date, dateTo: Date, user: User): void {
+        const overlappingRent = this.rents.find(rent =>
+            rent.bike === bike &&
+            (dateFrom <= rent.dateTo && dateTo >= rent.dateFrom)
+        );
+
+        if (overlappingRent) {
+            throw new Error("Aluguel já cadastrado");
+        } else {
+            const newRent = Rent.create(this.rents, bike, user, dateFrom, dateTo);
+            this.rents.push(newRent);
         }
     }
 
-    deleteRent(rent:Rent):void{
-        const rentIndex = this.rents.indexOf(rent)
-        if(rentIndex !== -1){
-            this.rents.splice(rentIndex, 1);
+    //returnDateBike  atualizar a data de retorno da bike, cadastrada inicialmento como 0
+    returnDateBike(id: string, dateReturned: Date): void {
+        const bike = this.getBikeById(id)
+        if (bike) {
+            const rent = this.rents.find((rent) => rent.bike === bike)
+            if (rent) {
+                rent.dateReturned = dateReturned
+            } else {
+                throw new Error("Aluguel não encontrado")
+            }
+
+        } else {
+            throw new Error("Bike não encontrada")
         }
     }
 
-    findUserByEmail(email:string): User | undefined {
-        return this.users.find(user => user.email === email)
+    //getAllRents  listar todos os alugueis
+    getAllRents() {
+        console.log(this.rents)
+    }
+    //getAllUsers  listar todos os usuários
+    getAllUsers() {
+        console.log(this.users)
+    }
+    //getAllBikes  listar todas as bikes
+    getBikes() {
+        console.log(this.bikes)
     }
 
-    findUserById(id:string): User | undefined {
-        return this.users.find(user => user.id === id)
-    }
-
-    findBikeById(id:string): Bike | undefined {
-        return this.bikes.find(bike => bike.id === id)
-    }
- 
-    findRentByStartDate(startDate:Date): Rent | undefined {
-        return this.rents.find(rent =>rent.dateFrom === startDate)
-    }
-    findRentByBikeId(bikeId:string): Rent|undefined {
-        return this.rents.find(rent =>rent.bike.id === bikeId)
-    }
-
-    getActiveRents(): Rent[] {
-        const currentDate = new Date();
-        return this.rents.filter(rent => rent.dateFrom <= currentDate && currentDate <= rent.dateTo);
-    }
-
-    getBikesRents(bike:Bike): Rent[]{
-        return this.rents.filter(rent =>rent.bike === bike)
-    }
-    
-    getUsersRents(user:User):Rent[]{
-        return this.rents.filter(rent => rent.user===user)
-    }
-
-    getAllUsers(): User[] {
-        return this.users
-    }
-
-    getAllBikes(): Bike[] {
-        return this.bikes
-    }
-
-    getAllRents():Rent[] {
-        return this.rents
 
 
- 
-       
+
+
+
+
+
+
+
 }
-

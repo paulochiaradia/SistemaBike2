@@ -6,7 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.User = void 0;
 const crypto_1 = __importDefault(require("crypto"));
 class User {
-    constructor(nome, email, password, id = crypto_1.default.randomUUID()) {
+    constructor(nome, email, password, id) {
         this.nome = nome;
         this.email = email;
         this.password = password;
@@ -28,8 +28,8 @@ class User {
     static isValidPassword(password) {
         if (password.length < 4)
             return false;
-        const constainsNumber = /\d/.test(password);
-        return constainsNumber;
+        const containsNumber = /\d/.test(password);
+        return containsNumber;
     }
 }
 exports.User = User;
