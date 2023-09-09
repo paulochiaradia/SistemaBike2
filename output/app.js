@@ -1,18 +1,9 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.App = void 0;
-const rent_1 = require("./rent");
-class App {
-    constructor() {
-        this.rents = [];
-        this.users = [];
-        this.bikes = [];
-    }
-    //registerbike
-    //removeuser
-    //rentbike
-    //ruturnbike
-    //getallrents
+import * as bcrypt from "bcryptjs";
+import { Rent } from "./rent";
+export class App {
+    rents = [];
+    users = [];
+    bikes = [];
     //getUserByEmail  buscar um usuário pelo id
     getUserByEmail(email) {
         return this.users.find((user) => user.email === email);
@@ -21,14 +12,31 @@ class App {
     getBikeById(id) {
         return this.bikes.find((bike) => bike.id === id);
     }
-    //registerUser cadastrar um usuário
-    registerUser(user) {
+    async registerUser(user) {
         const existeUser = this.getUserByEmail(user.email);
         if (existeUser) {
-            throw new Error("Usuario já cadastrado");
+            throw new Error("Usuário já cadastrado");
+        }
+        try {
+            const hash = await bcrypt.hash(user.password, 10);
+            user.password = hash;
+            this.users.push(user);
+        }
+        catch (err) {
+            throw new Error("Erro ao criptografar senha");
+        }
+    }
+    async authenticateUser(email, password) {
+        const user = this.getUserByEmail(email);
+        if (!user) {
+            return false;
+        }
+        const passwordMatch = await bcrypt.compare(password, user.password);
+        if (passwordMatch) {
+            return true;
         }
         else {
-            this.users.push(user);
+            return false;
         }
     }
     //registerBike  cadastrar uma bike
@@ -60,7 +68,7 @@ class App {
             throw new Error("Aluguel já cadastrado");
         }
         else {
-            const newRent = rent_1.Rent.create(this.rents, bike, user, dateFrom, dateTo);
+            const newRent = Rent.create(this.rents, bike, user, dateFrom, dateTo);
             this.rents.push(newRent);
         }
     }
@@ -68,7 +76,7 @@ class App {
     returnDateBike(id, dateReturned) {
         const bike = this.getBikeById(id);
         if (bike) {
-            const rent = this.rents.find((rent) => rent.bike === bike);
+            const rent = this.rents.find(rent => rent.bike === bike);
             if (rent) {
                 rent.dateReturned = dateReturned;
             }
@@ -93,4 +101,3 @@ class App {
         console.log(this.bikes);
     }
 }
-exports.App = App;

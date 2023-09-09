@@ -11,7 +11,7 @@ export class Rent {
     ) { }
     static create(rents: Rent[], bike: Bike, user: User, startDate: Date, endDate: Date): Rent {
         const canCreate = Rent.carRent(rents, startDate, endDate, bike.id)
-        if (canCreate) return new Rent(bike, user, startDate, endDate, null)
+        if (canCreate) return new Rent(bike, user, startDate, endDate, new Date(0))
         throw new Error("Overlapping")
     }
 

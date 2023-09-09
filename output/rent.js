@@ -1,7 +1,9 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.Rent = void 0;
-class Rent {
+export class Rent {
+    bike;
+    user;
+    dateFrom;
+    dateTo;
+    dateReturned;
     constructor(bike, user, dateFrom, dateTo, dateReturned) {
         this.bike = bike;
         this.user = user;
@@ -12,7 +14,7 @@ class Rent {
     static create(rents, bike, user, startDate, endDate) {
         const canCreate = Rent.carRent(rents, startDate, endDate, bike.id);
         if (canCreate)
-            return new Rent(bike, user, startDate, endDate, null);
+            return new Rent(bike, user, startDate, endDate, new Date(0));
         throw new Error("Overlapping");
     }
     static carRent(rents, startDate, endDate, id) {
@@ -24,4 +26,3 @@ class Rent {
         return true;
     }
 }
-exports.Rent = Rent;

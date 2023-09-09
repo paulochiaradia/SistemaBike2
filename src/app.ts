@@ -1,3 +1,4 @@
+import * as bcrypt from "bcryptjs";
 import { Bike } from "./bike";
 import { Rent } from "./rent";
 import { User } from "./user";
@@ -6,11 +7,6 @@ export class App {
     public rents: Rent[] = []
     public users: User[] = []
     public bikes: Bike[] = []
-    //registerbike
-    //removeuser
-    //rentbike
-    //ruturnbike
-    //getallrents
 
     //getUserByEmail  buscar um usuário pelo id
     getUserByEmail(email: string): User | undefined {
@@ -22,15 +18,34 @@ export class App {
         return this.bikes.find((bike) => bike.id === id)
     }
 
-    //registerUser cadastrar um usuário
-    registerUser(user: User): void {
-        const existeUser = this.getUserByEmail(user.email)
+    async registerUser(user: User): Promise<void> {
+        const existeUser = this.getUserByEmail(user.email);
         if (existeUser) {
-            throw new Error("Usuario já cadastrado")
-        } else {
-            this.users.push(user)
+            throw new Error("Usuário já cadastrado");
+        }
+    
+        try {
+            const hash = await bcrypt.hash(user.password, 10);
+            user.password = hash;
+            this.users.push(user);
+        } catch (err) {
+            throw new Error("Erro ao criptografar senha");
         }
     }
+
+    async authenticateUser(email: string, password: string): Promise<boolean> {
+        const user = this.getUserByEmail(email);
+        if (!user) {
+            return false; 
+        }
+            const passwordMatch = await bcrypt.compare(password, user.password);
+        if (passwordMatch) {
+            return true; 
+        } else {
+            return false; 
+        }
+    }
+    
 
     //registerBike  cadastrar uma bike
     registerBike(bike: Bike): void {
@@ -72,7 +87,7 @@ export class App {
     returnDateBike(id: string, dateReturned: Date): void {
         const bike = this.getBikeById(id)
         if (bike) {
-            const rent = this.rents.find((rent) => rent.bike === bike)
+            const rent = this.rents.find(rent => rent.bike === bike)
             if (rent) {
                 rent.dateReturned = dateReturned
             } else {

@@ -1,11 +1,9 @@
-"use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.User = void 0;
-const crypto_1 = __importDefault(require("crypto"));
-class User {
+import crypto from "crypto";
+export class User {
+    nome;
+    email;
+    password;
+    id;
     constructor(nome, email, password, id) {
         this.nome = nome;
         this.email = email;
@@ -19,7 +17,7 @@ class User {
         if (!User.isValidPassword(password)) {
             throw new Error("Password must be a valid password");
         }
-        return new User(nome, email, password, crypto_1.default.randomUUID());
+        return new User(nome, email, password, crypto.randomUUID());
     }
     static isValidEmail(email) {
         const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
@@ -32,4 +30,3 @@ class User {
         return containsNumber;
     }
 }
-exports.User = User;

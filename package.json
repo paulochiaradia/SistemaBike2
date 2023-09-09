@@ -9,9 +9,13 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "typescript": "^5.2.2"
+    "bcrypt": "^5.1.1",
+    "bcrypt-promised": "^1.0.1",
+    "bcryptjs": "^2.4.3"
   },
   "devDependencies": {
-    "@types/node": "^20.5.7"
+    "@types/bcryptjs": "^2.4.3",
+    "@types/node": "^20.5.7",
+    "typescript": "^5.2.2"
   }
 }
