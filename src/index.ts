@@ -9,7 +9,10 @@ async function main() {
     app.getAllUsers()
     console.log(app.atenticateUser(user1.email, "teste1"))
     app.getAllUsers()
-
+    const bike1 = new Bike("Caloi", "Normal", 29, 150, 10, "teste", 40, []);
+    app.registerBike(bike1)
+    app.rentBike(bike1, new Date("2021-10-10"), user1)
+    app.returnBike(bike1.id, new Date("2021-10-20"))
 }
 
 

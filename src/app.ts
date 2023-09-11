@@ -69,7 +69,7 @@ export class App {
     }
 
     //rentBike  cadastrar um aluguel de bike
-    rentBike(bike: Bike, dateFrom: Date, dateTo: Date, user: User): void {
+    rentBike(bike: Bike, dateFrom: Date, user: User): void {
         const overlappingRent = this.rents.find(rent =>
             rent.bike === bike &&
             (dateFrom == rent.start)
@@ -78,20 +78,20 @@ export class App {
         if (overlappingRent) {
             throw new Error("Bike já alugada")
         } else {
-            const newRent = Rent.create(this.rents, bike, user, dateFrom, dateTo);
+            const newRent = Rent.create(this.rents, bike, user, dateFrom);
             bike.available = false;
             this.rents.push(newRent);
         }
     }
 
-     returnBike(bikeId: string, userEmail: string):number {
+     returnBike(bikeId: string, dateReturned:Date):number {
         const today = new Date()
         const rent = this.rents.find(rent => 
             rent.bike.id === bikeId &&
-            rent.user.email === userEmail 
+            rent.user.email === rent.user.email 
         )
         if (rent) {
-            rent.end = today
+            rent.end = dateReturned
             const horas= Math.abs(rent.end.getTime() - rent.start.getTime()) / 36e5
             rent.bike.available = true
             return(rent.bike.rate * horas)

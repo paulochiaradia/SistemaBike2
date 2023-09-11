@@ -9,7 +9,7 @@ export class Rent {
         public start: Date,
         public dateReturned?: Date
     ) { }
-    static create(rents: Rent[], bike: Bike, user: User, startDate: Date, dateReturned: Date): Rent {
+    static create(rents: Rent[], bike: Bike, user: User, startDate: Date): Rent {
         const canCreate = Rent.carRent(rents, startDate, bike.id)
         if (canCreate) return new Rent(bike, user, startDate)
         throw new Error("Overlapping")
