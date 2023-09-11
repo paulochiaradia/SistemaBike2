@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@types/bcrypt": "^5.0.0",
     "bcrypt": "^5.1.1",
     "bcrypt-promised": "^1.0.1",
     "bcryptjs": "^2.4.3"

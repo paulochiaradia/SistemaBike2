@@ -9,6 +9,7 @@ export class Bike {
         public description: string,
         public rating: number,
         public imgUrls: string[],
-        public id: string = crypto.randomUUID()
+        public id: string = crypto.randomUUID(),
+        public available: boolean = true
     ) { }
 }

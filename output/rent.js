@@ -1,9 +1,7 @@
-export class Rent {
-    bike;
-    user;
-    dateFrom;
-    dateTo;
-    dateReturned;
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Rent = void 0;
+class Rent {
     constructor(bike, user, dateFrom, dateTo, dateReturned) {
         this.bike = bike;
         this.user = user;
@@ -26,3 +24,4 @@ export class Rent {
         return true;
     }
 }
+exports.Rent = Rent;

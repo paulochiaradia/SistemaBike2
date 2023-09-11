@@ -1,9 +1,24 @@
-import * as bcrypt from "bcryptjs";
-import { Rent } from "./rent";
-export class App {
-    rents = [];
-    users = [];
-    bikes = [];
+"use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.App = void 0;
+const rent_1 = require("./rent");
+const crypt_1 = require("./crypt");
+class App {
+    constructor() {
+        this.rents = [];
+        this.users = [];
+        this.bikes = [];
+        this.crypt = new crypt_1.Crypt();
+    }
     //getUserByEmail  buscar um usuário pelo id
     getUserByEmail(email) {
         return this.users.find((user) => user.email === email);
@@ -12,32 +27,38 @@ export class App {
     getBikeById(id) {
         return this.bikes.find((bike) => bike.id === id);
     }
-    async registerUser(user) {
-        const existeUser = this.getUserByEmail(user.email);
-        if (existeUser) {
-            throw new Error("Usuário já cadastrado");
-        }
-        try {
-            const hash = await bcrypt.hash(user.password, 10);
-            user.password = hash;
-            this.users.push(user);
-        }
-        catch (err) {
-            throw new Error("Erro ao criptografar senha");
-        }
+    //registerUser  cadastrar um usuário
+    registerUser(user) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const existeUser = this.getUserByEmail(user.email);
+            if (existeUser) {
+                throw new Error("Usuario já cadastrado");
+            }
+            else {
+                const hashPassword = yield this.crypt.encrypt(user.password);
+                user.password = hashPassword;
+                this.users.push(user);
+            }
+        });
     }
-    async authenticateUser(email, password) {
-        const user = this.getUserByEmail(email);
-        if (!user) {
-            return false;
-        }
-        const passwordMatch = await bcrypt.compare(password, user.password);
-        if (passwordMatch) {
-            return true;
-        }
-        else {
-            return false;
-        }
+    atenticateUser(email, password) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const user = this.getUserByEmail(email);
+            if (user) {
+                const passwordMatch = yield this.crypt.compare(password, user.password);
+                if (passwordMatch) {
+                    return true;
+                }
+                else {
+                    return false;
+                    throw new Error("Senha incorreta");
+                }
+            }
+            else {
+                return false;
+                throw new Error("Usuario não encontrado");
+            }
+        });
     }
     //registerBike  cadastrar uma bike
     registerBike(bike) {
@@ -68,7 +89,7 @@ export class App {
             throw new Error("Aluguel já cadastrado");
         }
         else {
-            const newRent = Rent.create(this.rents, bike, user, dateFrom, dateTo);
+            const newRent = rent_1.Rent.create(this.rents, bike, user, dateFrom, dateTo);
             this.rents.push(newRent);
         }
     }
@@ -100,4 +121,14 @@ export class App {
     getBikes() {
         console.log(this.bikes);
     }
+    listUers() {
+        return this.users.slice();
+    }
+    listBikes() {
+        return this.bikes.slice();
+    }
+    listRents() {
+        return this.rents.slice();
+    }
 }
+exports.App = App;
