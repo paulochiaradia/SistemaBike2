@@ -33,6 +33,7 @@ export class App {
         }
     }
 
+    //authenticateUser  autenticar um usuário
     async atenticateUser(email: string, password: string): Promise<boolean> {
         const user = this.getUserByEmail(email)
         if (user) {
@@ -89,6 +90,7 @@ export class App {
         this.rents.push(rent)
     }
 
+    //returnBike  devolver uma bike e calcular o valor do aluguel
    async returnBike(bikeId: string, userEmail:string, cep:string):Promise<number> {
         const today = new Date()
         const bike = this.getBikeById(bikeId)
@@ -107,7 +109,6 @@ export class App {
         }
         throw new Error('Aluguel não encontrado.')
     }
-
 
     //getAllRents  listar todos os alugueis
     getAllRents() {
