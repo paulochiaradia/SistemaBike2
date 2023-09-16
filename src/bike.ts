@@ -1,4 +1,6 @@
 import crypto from "crypto";
+import { Location } from "./location";
+
 export class Bike {
     constructor(
         public name: string,
@@ -10,6 +12,7 @@ export class Bike {
         public rating: number,
         public imgUrls: string[],
         public id: string = crypto.randomUUID(),
-        public available: boolean = true
+        public available: boolean = true,
+        public location?: Location
     ) { }
 }

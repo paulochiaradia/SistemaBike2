@@ -6,7 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Bike = void 0;
 const crypto_1 = __importDefault(require("crypto"));
 class Bike {
-    constructor(name, type, bodySize, maxLoad, rate, description, rating, imgUrls, id = crypto_1.default.randomUUID(), available = true) {
+    constructor(name, type, bodySize, maxLoad, rate, description, rating, imgUrls, id = crypto_1.default.randomUUID(), available = true, location) {
         this.name = name;
         this.type = type;
         this.bodySize = bodySize;
@@ -17,6 +17,7 @@ class Bike {
         this.imgUrls = imgUrls;
         this.id = id;
         this.available = available;
+        this.location = location;
     }
 }
 exports.Bike = Bike;

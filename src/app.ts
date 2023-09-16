@@ -2,6 +2,8 @@ import { Bike } from "./bike";
 import { Rent } from "./rent";
 import { User } from "./user";
 import { Crypt } from "./crypt";
+import { CepResponse, consultarCep } from "correios-brasil/dist";
+import { Location } from "./location";
 
 export class App {
     public rents: Rent[] = []
@@ -47,12 +49,14 @@ export class App {
 
 
     //registerBike  cadastrar uma bike
-    registerBike(bike: Bike): void {
-        const existeBike = this.getBikeById(bike.id)
+    async registerBike(bike: Bike, cep: string): Promise<void> {
+        const existeBike = this.getBikeById(bike.id);
         if (existeBike) {
-            throw new Error("Bike já cadastrada")
+            throw new Error("Bike já cadastrada");
         } else {
-            this.bikes.push(bike)
+            const localidade = await findLocal(cep);
+            bike.location = localidade; // Atribuir diretamente o objeto de localização
+            this.bikes.push(bike);
         }
     }
 
@@ -85,14 +89,17 @@ export class App {
         this.rents.push(rent)
     }
 
-     returnBike(bikeId: string, userEmail:string):number {
+   async returnBike(bikeId: string, userEmail:string, cep:string):Promise<number> {
         const today = new Date()
+        const bike = this.getBikeById(bikeId)
         const rent = this.rents.find(rent => 
             rent.bike.id === bikeId &&
             rent.user.email === rent.user.email &&
             rent.end === undefined
         )
-        if (rent) {
+        if (rent && bike) {
+            const location = await findLocal(cep)
+            bike.location = location
             rent.end = today
             rent.bike.available = true
             const horas = diffHours(today, rent.start)
@@ -111,7 +118,7 @@ export class App {
         console.log(this.users)
     }
     //getAllBikes  listar todas as bikes
-    getBikes() {
+    getAllBikes() {
         console.log(this.bikes)
     }
 
@@ -137,3 +144,24 @@ function diffHours(dt2: Date, dt1: Date) {
     diff /= (60 * 60);
     return Math.abs(diff);
   }
+
+//funcao para buscar localizacao
+async function findLocal(cep: string): Promise<Location> {
+    try {
+        const response: CepResponse = await consultarCep(cep);
+        const location = new Location(
+            response.cep,
+            response.logradouro,
+            response.bairro,
+            response.localidade,
+            response.uf
+        );
+        return location;
+    } catch (err) {
+        throw new Error("Cep não encontrado");
+    }
+}
+
+
+
+

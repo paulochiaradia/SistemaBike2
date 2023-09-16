@@ -12,6 +12,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.App = void 0;
 const rent_1 = require("./rent");
 const crypt_1 = require("./crypt");
+const dist_1 = require("correios-brasil/dist");
+const location_1 = require("./location");
 class App {
     constructor() {
         this.rents = [];
@@ -59,14 +61,18 @@ class App {
         });
     }
     //registerBike  cadastrar uma bike
-    registerBike(bike) {
-        const existeBike = this.getBikeById(bike.id);
-        if (existeBike) {
-            throw new Error("Bike já cadastrada");
-        }
-        else {
-            this.bikes.push(bike);
-        }
+    registerBike(bike, cep) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const existeBike = this.getBikeById(bike.id);
+            if (existeBike) {
+                throw new Error("Bike já cadastrada");
+            }
+            else {
+                const localidade = yield findLocal(cep);
+                bike.location = localidade; // Atribuir diretamente o objeto de localização
+                this.bikes.push(bike);
+            }
+        });
     }
     //removeUser  remover um usuário
     removeUser(email) {
@@ -96,18 +102,23 @@ class App {
         const rent = new rent_1.Rent(bike, user, new Date());
         this.rents.push(rent);
     }
-    returnBike(bikeId, userEmail) {
-        const today = new Date();
-        const rent = this.rents.find(rent => rent.bike.id === bikeId &&
-            rent.user.email === rent.user.email &&
-            rent.end === undefined);
-        if (rent) {
-            rent.end = today;
-            rent.bike.available = true;
-            const horas = diffHours(today, rent.start);
-            return (rent.bike.rate * horas);
-        }
-        throw new Error('Aluguel não encontrado.');
+    returnBike(bikeId, userEmail, cep) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const today = new Date();
+            const bike = this.getBikeById(bikeId);
+            const rent = this.rents.find(rent => rent.bike.id === bikeId &&
+                rent.user.email === rent.user.email &&
+                rent.end === undefined);
+            if (rent && bike) {
+                const location = yield findLocal(cep);
+                bike.location = location;
+                rent.end = today;
+                rent.bike.available = true;
+                const horas = diffHours(today, rent.start);
+                return (rent.bike.rate * horas);
+            }
+            throw new Error('Aluguel não encontrado.');
+        });
     }
     //getAllRents  listar todos os alugueis
     getAllRents() {
@@ -118,7 +129,7 @@ class App {
         console.log(this.users);
     }
     //getAllBikes  listar todas as bikes
-    getBikes() {
+    getAllBikes() {
         console.log(this.bikes);
     }
     //listUsers  listar todos os usuários vetor
@@ -140,4 +151,17 @@ function diffHours(dt2, dt1) {
     var diff = (dt2.getTime() - dt1.getTime()) / 1000;
     diff /= (60 * 60);
     return Math.abs(diff);
+}
+//funcao para buscar localizacao
+function findLocal(cep) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const response = yield (0, dist_1.consultarCep)(cep);
+            const location = new location_1.Location(response.cep, response.logradouro, response.bairro, response.localidade, response.uf);
+            return location;
+        }
+        catch (err) {
+            throw new Error("Cep não encontrado");
+        }
+    });
 }
