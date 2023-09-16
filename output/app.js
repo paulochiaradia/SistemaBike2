@@ -50,12 +50,10 @@ class App {
                     return true;
                 }
                 else {
-                    return false;
                     throw new Error("Senha incorreta");
                 }
             }
             else {
-                return false;
                 throw new Error("Usuario não encontrado");
             }
         });
@@ -82,32 +80,34 @@ class App {
         }
     }
     //rentBike  cadastrar um aluguel de bike
-    rentBike(bike, dateFrom, dateTo, user) {
-        const overlappingRent = this.rents.find(rent => rent.bike === bike &&
-            (dateFrom <= rent.dateTo && dateTo >= rent.dateFrom));
-        if (overlappingRent) {
-            throw new Error("Aluguel já cadastrado");
+    rentBike(bikeId, userEmail) {
+        const bike = this.getBikeById(bikeId);
+        const user = this.getUserByEmail(userEmail);
+        if (!bike) {
+            throw new Error('Bicicleta nao encontrada.');
         }
-        else {
-            const newRent = rent_1.Rent.create(this.rents, bike, user, dateFrom, dateTo);
-            this.rents.push(newRent);
+        if (!user) {
+            throw new Error('Usuario nao encontrado.');
         }
+        if (!bike.available) {
+            throw new Error('Bicicleta indisponivel.');
+        }
+        bike.available = false;
+        const rent = new rent_1.Rent(bike, user, new Date());
+        this.rents.push(rent);
     }
-    //returnDateBike  atualizar a data de retorno da bike, cadastrada inicialmento como 0
-    returnDateBike(id, dateReturned) {
-        const bike = this.getBikeById(id);
-        if (bike) {
-            const rent = this.rents.find(rent => rent.bike === bike);
-            if (rent) {
-                rent.dateReturned = dateReturned;
-            }
-            else {
-                throw new Error("Aluguel não encontrado");
-            }
+    returnBike(bikeId, userEmail) {
+        const today = new Date();
+        const rent = this.rents.find(rent => rent.bike.id === bikeId &&
+            rent.user.email === rent.user.email &&
+            rent.end === undefined);
+        if (rent) {
+            rent.end = today;
+            rent.bike.available = true;
+            const horas = diffHours(today, rent.start);
+            return (rent.bike.rate * horas);
         }
-        else {
-            throw new Error("Bike não encontrada");
-        }
+        throw new Error('Aluguel não encontrado.');
     }
     //getAllRents  listar todos os alugueis
     getAllRents() {
@@ -121,14 +121,23 @@ class App {
     getBikes() {
         console.log(this.bikes);
     }
+    //listUsers  listar todos os usuários vetor
     listUers() {
         return this.users.slice();
     }
+    //listBikes  listar todas as bikes vetor
     listBikes() {
         return this.bikes.slice();
     }
+    //listRents  listar todos os alugueis vetor
     listRents() {
         return this.rents.slice();
     }
 }
 exports.App = App;
+//diffHours  calcular a diferença de horas entre duas datas
+function diffHours(dt2, dt1) {
+    var diff = (dt2.getTime() - dt1.getTime()) / 1000;
+    diff /= (60 * 60);
+    return Math.abs(diff);
+}

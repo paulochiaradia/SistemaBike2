@@ -1,23 +1,25 @@
 import { App } from "./app";
 import { Bike } from "./bike";
 import { User } from "./user";
+import sinon from "sinon";
 
 async function main() {
     const app = new App()
+    const clock=sinon.useFakeTimers(new Date("2021-10-10"))
+    const bike1 = new Bike("Caloi", "Normal", 29, 150, 90, "teste", 40, []);
     const user1 = User.create("Paulo", "paulo@gmail.com", "teste1")
     await app.registerUser(user1)
-    app.getAllUsers()
-    console.log(app.atenticateUser(user1.email, "teste1"))
-    app.getAllUsers()
-    const bike1 = new Bike("Caloi", "Normal", 29, 150, 10, "teste", 40, []);
     app.registerBike(bike1)
-    app.rentBike(bike1, new Date("2021-10-10"), user1)
-    app.returnBike(bike1.id, new Date("2021-10-20"))
+    console.log("Biclceta Disponivel?", bike1.available)
+    app.rentBike(bike1.id, user1.email)
+    console.log("Biclceta Disponivel?", bike1.available)
+    clock.tick(1000*60*25)
+    console.log(app.returnBike(bike1.id, user1.email))
+    console.log("Biclceta Disponivel?", bike1.available)
 }
 
 
-
-
+main()
 /*
 const app = new App()
 const bike1 = new Bike("Caloi", "Normal", 29, 150, 10, "teste", 40, []);

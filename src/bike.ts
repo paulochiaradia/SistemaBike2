@@ -4,7 +4,7 @@ export class Bike {
         public name: string,
         public type: string,
         public bodySize: number,
-        public MaxLoad: number,
+        public maxLoad: number,
         public rate: number,
         public description: string,
         public rating: number,

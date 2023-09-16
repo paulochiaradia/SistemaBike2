@@ -8,6 +8,7 @@ export class App {
     public users: User[] = []
     public bikes: Bike[] = []
     public crypt: Crypt = new Crypt()
+
     //getUserByEmail  buscar um usuário pelo id
     getUserByEmail(email: string): User | undefined {
         return this.users.find((user) => user.email === email)
@@ -37,11 +38,9 @@ export class App {
             if (passwordMatch) {
                 return true
             } else {
-                return false
                 throw new Error("Senha incorreta")
             }
         } else {
-            return false
             throw new Error("Usuario não encontrado")
         }
     }
@@ -69,34 +68,37 @@ export class App {
     }
 
     //rentBike  cadastrar um aluguel de bike
-    rentBike(bike: Bike, dateFrom: Date, user: User): void {
-        const overlappingRent = this.rents.find(rent =>
-            rent.bike === bike &&
-            (dateFrom == rent.start)
-        );
-
-        if (overlappingRent) {
-            throw new Error("Bike já alugada")
-        } else {
-            const newRent = Rent.create(this.rents, bike, user, dateFrom);
-            bike.available = false;
-            this.rents.push(newRent);
+    rentBike(bikeId:string, userEmail:string): void {
+        const bike = this.getBikeById(bikeId)
+        const user = this.getUserByEmail(userEmail)
+        if(!bike) {
+            throw new Error('Bicicleta nao encontrada.')
         }
+        if(!user) {
+            throw new Error('Usuario nao encontrado.')
+        }
+        if (!bike.available) {
+            throw new Error('Bicicleta indisponivel.')
+        }
+        bike.available = false
+        const rent = new Rent(bike, user, new Date())
+        this.rents.push(rent)
     }
 
-     returnBike(bikeId: string, dateReturned:Date):number {
+     returnBike(bikeId: string, userEmail:string):number {
         const today = new Date()
         const rent = this.rents.find(rent => 
             rent.bike.id === bikeId &&
-            rent.user.email === rent.user.email 
+            rent.user.email === rent.user.email &&
+            rent.end === undefined
         )
         if (rent) {
-            rent.end = dateReturned
-            const horas= Math.abs(rent.end.getTime() - rent.start.getTime()) / 36e5
+            rent.end = today
             rent.bike.available = true
+            const horas = diffHours(today, rent.start)
             return(rent.bike.rate * horas)
         }
-        throw new Error('Rent not found.')
+        throw new Error('Aluguel não encontrado.')
     }
 
 
@@ -113,15 +115,25 @@ export class App {
         console.log(this.bikes)
     }
 
+    //listUsers  listar todos os usuários vetor
     listUers():User[] {
         return this.users.slice()
     }
 
+    //listBikes  listar todas as bikes vetor
     listBikes():Bike[] {
         return this.bikes.slice()
     }
 
+    //listRents  listar todos os alugueis vetor
     listRents():Rent[] {
         return this.rents.slice()
     }
 }
+
+//diffHours  calcular a diferença de horas entre duas datas
+function diffHours(dt2: Date, dt1: Date) {
+    var diff = (dt2.getTime() - dt1.getTime()) / 1000;
+    diff /= (60 * 60);
+    return Math.abs(diff);
+  }

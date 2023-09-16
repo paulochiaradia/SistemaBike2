@@ -12,11 +12,13 @@
     "@types/bcrypt": "^5.0.0",
     "bcrypt": "^5.1.1",
     "bcrypt-promised": "^1.0.1",
-    "bcryptjs": "^2.4.3"
+    "bcryptjs": "^2.4.3",
+    "sinon": "^16.0.0"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.3",
     "@types/node": "^20.5.7",
+    "@types/sinon": "^10.0.16",
     "typescript": "^5.2.2"
   }
 }
