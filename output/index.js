@@ -28,6 +28,9 @@ function main() {
         app.rentBike(bike1.id, user1.email);
         console.log(yield app.returnBike(bike1.id, user1.email, "12120091"));
         app.getAllBikes();
+        yield app.atualizarEnderecoBike(bike1.id, "12125208");
+        console.log("------");
+        app.getAllBikes();
     });
 }
 main();

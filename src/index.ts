@@ -14,6 +14,9 @@ async function main() {
     app.rentBike(bike1.id, user1.email)
     console.log(await app.returnBike(bike1.id, user1.email, "12120091"))
     app.getAllBikes()
+    await app.atualizarEnderecoBike(bike1.id, "12125208")
+    console.log("------")
+    app.getAllBikes()
 }
 
 

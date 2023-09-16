@@ -43,6 +43,7 @@ class App {
             }
         });
     }
+    //authenticateUser  autenticar um usuário
     atenticateUser(email, password) {
         return __awaiter(this, void 0, void 0, function* () {
             const user = this.getUserByEmail(email);
@@ -102,6 +103,7 @@ class App {
         const rent = new rent_1.Rent(bike, user, new Date());
         this.rents.push(rent);
     }
+    //returnBike  devolver uma bike e calcular o valor do aluguel
     returnBike(bikeId, userEmail, cep) {
         return __awaiter(this, void 0, void 0, function* () {
             const today = new Date();
@@ -118,6 +120,18 @@ class App {
                 return (rent.bike.rate * horas);
             }
             throw new Error('Aluguel não encontrado.');
+        });
+    }
+    atualizarEnderecoBike(bikeId, cep) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const bike = this.getBikeById(bikeId);
+            if (!bike) {
+                throw new Error("Bike não encontrada");
+            }
+            else {
+                const localidade = yield findLocal(cep);
+                bike.location = localidade;
+            }
         });
     }
     //getAllRents  listar todos os alugueis

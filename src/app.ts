@@ -110,6 +110,16 @@ export class App {
         throw new Error('Aluguel não encontrado.')
     }
 
+    async atualizarEnderecoBike(bikeId: string, cep: string): Promise<void> {
+        const bike = this.getBikeById(bikeId);
+        if (!bike) {
+            throw new Error("Bike não encontrada");
+        } else {
+            const localidade = await findLocal(cep);
+            bike.location = localidade;
+        }
+    }
+
     //getAllRents  listar todos os alugueis
     getAllRents() {
         console.log(this.rents)
