@@ -43,4 +43,42 @@ describe('App', () => {
         const bikeIdTeste = crypto.randomUUID()
         expect(() => app.bikeCadastrada(bikeIdTeste)).toThrow("Bike não cadastrada")
     })
+    it('should correct get user', async() => {
+        const app = new App()
+        const user1  = User.create("Paulo", "paulo@gmail.com", "teste1")
+        await app.registerUser(user1)
+        expect(app.getUserByEmail(user1.email)).toEqual(user1)
     });
+
+    it('should correct get bike', async() => {
+        const app = new App()
+        const bike1 = new Bike('caloi mountainbike', 'mountain bike',
+        1234, 1234, 100.0, 'My bike', 5, [])
+        await app.registerBike(bike1, "12120075")
+        expect(app.getBikeById(bike1.id)).toEqual(bike1)
+    });
+
+    it('should correct register user', async() => {
+        const app = new App()
+        const user1  = User.create("Paulo", "paulo@gmail.com", "teste1")
+        await app.registerUser(user1)
+        expect(app.getUserByEmail(user1.email)).toEqual(user1)
+    });
+
+    it('should correct authenticate user', async() => {
+        const app = new App()
+        const user1  = User.create("Paulo", "paulo@gmail.com", "teste1")
+        await app.registerUser(user1)
+        expect(await app.atenticateUser(user1.email, 'teste1')).toEqual(true)
+    });
+
+    it('should correct register bike', async() => {
+        const app = new App()
+        const bike1 = new Bike('caloi mountainbike', 'mountain bike',
+        1234, 1234, 100.0, 'My bike', 5, [])
+        await app.registerBike(bike1, "12120075")
+        expect(app.getBikeById(bike1.id)).toEqual(bike1)
+    });
+
+
+});

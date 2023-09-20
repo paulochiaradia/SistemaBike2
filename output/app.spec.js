@@ -51,4 +51,28 @@ describe('App', () => {
         const bikeIdTeste = crypto_1.default.randomUUID();
         expect(() => app.bikeCadastrada(bikeIdTeste)).toThrow("Bike não cadastrada");
     });
+    it('should correct get user', () => __awaiter(void 0, void 0, void 0, function* () {
+        const app = new app_1.App();
+        const user1 = user_1.User.create("Paulo", "paulo@gmail.com", "teste1");
+        yield app.registerUser(user1);
+        expect(app.getUserByEmail(user1.email)).toEqual(user1);
+    }));
+    it('should correct get bike', () => __awaiter(void 0, void 0, void 0, function* () {
+        const app = new app_1.App();
+        const bike1 = new bike_1.Bike('caloi mountainbike', 'mountain bike', 1234, 1234, 100.0, 'My bike', 5, []);
+        yield app.registerBike(bike1, "12120075");
+        expect(app.getBikeById(bike1.id)).toEqual(bike1);
+    }));
+    it('should correct register user', () => __awaiter(void 0, void 0, void 0, function* () {
+        const app = new app_1.App();
+        const user1 = user_1.User.create("Paulo", "paulo@gmail.com", "teste1");
+        yield app.registerUser(user1);
+        expect(app.getUserByEmail(user1.email)).toEqual(user1);
+    }));
+    it('should correct authenticate user', () => __awaiter(void 0, void 0, void 0, function* () {
+        const app = new app_1.App();
+        const user1 = user_1.User.create("Paulo", "paulo@gmail.com", "teste1");
+        yield app.registerUser(user1);
+        expect(yield app.atenticateUser(user1.email, 'teste1')).toEqual(true);
+    }));
 });
