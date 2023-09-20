@@ -155,7 +155,7 @@ export class App {
             const cep1 = await findLocal(cep)
             bike.location = cep1
         } else {
-            throw new Error("Bike não encontrada")
+            throw new Error("Bike não cadastrada")
         }
     }
 

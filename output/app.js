@@ -167,7 +167,7 @@ class App {
                 bike.location = cep1;
             }
             else {
-                throw new Error("Bike não encontrada");
+                throw new Error("Bike não cadastrada");
             }
         });
     }

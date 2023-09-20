@@ -35,12 +35,12 @@ describe('App', () => {
         const app = new App()
         const bikeIdTeste = crypto.randomUUID()
         const cepTeste = "12211902"
-        await expect(app.moveBikeTo(bikeIdTeste, cepTeste)).rejects.toThrow("Bike não encontrada")
+        await expect(app.moveBikeTo(bikeIdTeste, cepTeste)).rejects.toThrow("Bike não cadastrada")
     })
 
-    it('should throw an exception when trying to acess invalid bike(unregistered bike)', () => {	
+    it('should throw an exception when trying to acess an unregistered bike', () => {
         const app = new App()
         const bikeIdTeste = crypto.randomUUID()
-        expect(app.getBikeById(bikeIdTeste)).rejects.toThrow("Bike não encontrada")
+        expect(() => app.bikeCadastrada(bikeIdTeste)).toThrow("Bike não cadastrada")
     })
-});
+    });
