@@ -4,6 +4,7 @@ import { User } from "./user";
 import { Crypt } from "./crypt";
 import { CepResponse, consultarCep } from "correios-brasil/dist";
 import { Location } from "./location";
+import { BikeNotFoundError } from "../Error/bike-not-found-error";
 
 export class App {
     public rents: Rent[] = []
@@ -155,7 +156,7 @@ export class App {
             const cep1 = await findLocal(cep)
             bike.location = cep1
         } else {
-            throw new Error("Bike não cadastrada")
+            throw new BikeNotFoundError
         }
     }
 

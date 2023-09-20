@@ -3,7 +3,7 @@ import { App } from "./app"
 import { Bike } from "./bike"
 import { User } from "./user"
 import crypto from "crypto";
-
+import { BikeNotFoundError } from "../Error/bike-not-found-error";
 describe('App', () => {
     it('should correctly calculate the rent amount', async () => {
         const app = new App()
@@ -35,7 +35,7 @@ describe('App', () => {
         const app = new App()
         const bikeIdTeste = crypto.randomUUID()
         const cepTeste = "12211902"
-        await expect(app.moveBikeTo(bikeIdTeste, cepTeste)).rejects.toThrow("Bike não cadastrada")
+        await expect(app.moveBikeTo(bikeIdTeste, cepTeste)).rejects.toThrow(BikeNotFoundError)
     })
 
     it('should throw an exception when trying to acess an unregistered bike', () => {
@@ -80,5 +80,13 @@ describe('App', () => {
         expect(app.getBikeById(bike1.id)).toEqual(bike1)
     });
 
+    it('should correct rent bike', async() => {
+        const app = new App()
+        const bike1 = new Bike('caloi mountainbike', 'mountain bike',
+        1234, 1234, 100.0, 'My bike', 5, [])
+        const user1  = User.create("Paulo", "paulo.chiaradia@gmail.com", "teste1")
+        await app.registerUser(user1)
+
+    });
 
 });
