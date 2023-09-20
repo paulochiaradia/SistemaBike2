@@ -4,6 +4,7 @@ import { Bike } from "./bike"
 import { User } from "./user"
 import crypto from "crypto";
 import { BikeNotFoundError } from "../Error/bike-not-found-error";
+import { BikeNotRegistredError } from "../Error/bike-not-registred-erro";
 describe('App', () => {
     it('should correctly calculate the rent amount', async () => {
         const app = new App()
@@ -41,7 +42,7 @@ describe('App', () => {
     it('should throw an exception when trying to acess an unregistered bike', () => {
         const app = new App()
         const bikeIdTeste = crypto.randomUUID()
-        expect(() => app.bikeCadastrada(bikeIdTeste)).toThrow("Bike não cadastrada")
+        expect(() => app.bikeCadastrada(bikeIdTeste)).toThrow(BikeNotRegistredError)
     })
     it('should correct get user', async() => {
         const app = new App()

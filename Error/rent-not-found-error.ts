@@ -1,6 +1,6 @@
-export class IncorrectPasswordError extends Error {
-    public readonly name = "IncorrectPasswordError"
+export class RentNotFindError extends Error {
+    public readonly name = "RentNotFindError"
     constructor() {
-        super("Incorrect Password.");
+        super("Rent not find Error.");
     }
 }

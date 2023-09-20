@@ -5,6 +5,14 @@ import { Crypt } from "./crypt";
 import { CepResponse, consultarCep } from "correios-brasil/dist";
 import { Location } from "./location";
 import { BikeNotFoundError } from "../Error/bike-not-found-error";
+import { UserNotFindError } from "../Error/user-not-found-error";
+import { IncorrectPasswordError } from "../Error/incorrect-password-error";
+import { BikeNotAvailableError } from "../Error/bike-not-available-error";
+import { RentNotFindError } from "../Error/rent-not-found-error";
+import { BikeNotRegistredError } from "../Error/bike-not-registred-erro";
+import { CepNotRegistredError } from "../Error/cep-not-registred-error";
+import { BikeAlreadyRegisteredError } from "../Error/bike-already-registred-error";
+import { UserAlreadyRegisteredError } from "../Error/user-already-registred-error";
 
 export class App {
     public rents: Rent[] = []
@@ -14,19 +22,24 @@ export class App {
 
     //getUserByEmail  buscar um usuário pelo id
     getUserByEmail(email: string): User | undefined {
-        return this.users.find((user) => user.email === email)
+        const user= this.users.find((user) => user.email === email)
+        if(!user) throw new UserNotFindError()
+        return user
     }
 
     //getBikeById  buscar uma bike pelo id
     getBikeById(id: string): Bike | undefined {
-        return this.bikes.find((bike) => bike.id === id)
+        const bike = this.bikes.find((bike) => bike.id === id)
+        if(!bike) throw new BikeNotFoundError()
+        return bike
+
     }
 
     //registerUser  cadastrar um usuário
     async registerUser(user: User): Promise<void> {
         const existeUser = this.getUserByEmail(user.email)
         if (existeUser) {
-            throw new Error("Usuario já cadastrado")
+            throw new UserAlreadyRegisteredError()
         } else {
             const hashPassword = await this.crypt.encrypt(user.password)
             user.password = hashPassword
@@ -42,19 +55,18 @@ export class App {
             if (passwordMatch) {
                 return true
             } else {
-                throw new Error("Senha incorreta")
+                throw new IncorrectPasswordError()
             }
         } else {
-            throw new Error("Usuario não encontrado")
+            throw new UserNotFindError()
         }
     }
-
 
     //registerBike  cadastrar uma bike
     async registerBike(bike: Bike, cep: string): Promise<void> {
         const existeBike = this.getBikeById(bike.id);
         if (existeBike) {
-            throw new Error("Bike já cadastrada");
+            throw new BikeAlreadyRegisteredError();
         } else {
             const localidade = await findLocal(cep);
             bike.location = localidade; // Atribuir diretamente o objeto de localização
@@ -69,7 +81,7 @@ export class App {
             const index = this.users.indexOf(user)
             this.users.splice(index, 1)
         } else {
-            throw new Error("Usuario não encontrado")
+            throw new UserNotFindError()
         }
     }
 
@@ -78,13 +90,13 @@ export class App {
         const bike = this.getBikeById(bikeId)
         const user = this.getUserByEmail(userEmail)
         if(!bike) {
-            throw new Error('Bicicleta nao encontrada.')
+            throw new BikeNotFoundError()
         }
         if(!user) {
-            throw new Error('Usuario nao encontrado.')
+            throw new UserNotFindError()
         }
         if (!bike.available) {
-            throw new Error('Bicicleta indisponivel.')
+            throw new BikeNotAvailableError()
         }
         bike.available = false
         const rent = new Rent(bike, user, new Date())
@@ -108,13 +120,13 @@ export class App {
             const horas = diffHours(today, rent.start)
             return(rent.bike.rate * horas)
         }
-        throw new Error('Aluguel não encontrado.')
+        throw new RentNotFindError()
     }
 
     async atualizarEnderecoBike(bikeId: string, cep: string): Promise<void> {
         const bike = this.getBikeById(bikeId);
         if (!bike) {
-            throw new Error("Bike não encontrada");
+            throw new BikeNotFoundError();
         } else {
             const localidade = await findLocal(cep);
             bike.location = localidade;
@@ -166,9 +178,10 @@ export class App {
         if (bike) {
             return true
         } else {
-            throw new Error("Bike não cadastrada")
+            throw new BikeNotRegistredError()
         }
     }
+
 }
 
 //diffHours  calcular a diferença de horas entre duas datas
@@ -191,7 +204,7 @@ async function findLocal(cep: string): Promise<Location> {
         );
         return location;
     } catch (err) {
-        throw new Error("Cep não encontrado");
+        throw new CepNotRegistredError();
     }
 }
 

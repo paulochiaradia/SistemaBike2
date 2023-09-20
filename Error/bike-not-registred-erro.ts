@@ -1,6 +1,6 @@
-export class BikeNotRegistred extends Error {
-    public readonly name = "BikeNotRegistred"
+export class BikeNotRegistredError extends Error {
+    public readonly name = "BikeNotRegistredError"
     constructor() {
-        super("BikeNotRegistred.");
+        super("Bike not registred.");
     }
 }
