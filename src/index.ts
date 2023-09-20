@@ -17,6 +17,9 @@ async function main() {
     await app.atualizarEnderecoBike(bike1.id, "12125208")
     console.log("------")
     app.getAllBikes()
+    await app.moveBikeTo(bike1.id, "12211902")
+    console.log("------_______----_______")
+    app.getAllBikes()
 }
 
 

@@ -158,6 +158,29 @@ class App {
     listRents() {
         return this.rents.slice();
     }
+    //moveBikeTo  mover uma bike para uma localização específica
+    moveBikeTo(bikeId, cep) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const bike = this.getBikeById(bikeId);
+            if (bike) {
+                const cep1 = yield findLocal(cep);
+                bike.location = cep1;
+            }
+            else {
+                throw new Error("Bike não encontrada");
+            }
+        });
+    }
+    //bikecadastrada  verificar se uma bike está cadastrada
+    bikeCadastrada(bikeId) {
+        const bike = this.getBikeById(bikeId);
+        if (bike) {
+            return true;
+        }
+        else {
+            throw new Error("Bike não cadastrada");
+        }
+    }
 }
 exports.App = App;
 //diffHours  calcular a diferença de horas entre duas datas

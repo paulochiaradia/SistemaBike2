@@ -147,6 +147,27 @@ export class App {
     listRents():Rent[] {
         return this.rents.slice()
     }
+
+    //moveBikeTo  mover uma bike para uma localização específica
+    async moveBikeTo(bikeId: string, cep: string): Promise<void> {
+        const bike = this.getBikeById(bikeId)
+        if (bike) {
+            const cep1 = await findLocal(cep)
+            bike.location = cep1
+        } else {
+            throw new Error("Bike não encontrada")
+        }
+    }
+
+    //bikecadastrada  verificar se uma bike está cadastrada
+    bikeCadastrada(bikeId: string): boolean {
+        const bike = this.getBikeById(bikeId)
+        if (bike) {
+            return true
+        } else {
+            throw new Error("Bike não cadastrada")
+        }
+    }
 }
 
 //diffHours  calcular a diferença de horas entre duas datas

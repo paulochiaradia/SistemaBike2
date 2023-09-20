@@ -31,6 +31,9 @@ function main() {
         yield app.atualizarEnderecoBike(bike1.id, "12125208");
         console.log("------");
         app.getAllBikes();
+        yield app.moveBikeTo(bike1.id, "12211902");
+        console.log("------_______----_______");
+        app.getAllBikes();
     });
 }
 main();
