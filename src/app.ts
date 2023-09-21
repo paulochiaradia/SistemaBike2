@@ -11,8 +11,8 @@ import { BikeNotAvailableError } from "../Error/bike-not-available-error";
 import { RentNotFindError } from "../Error/rent-not-found-error";
 import { BikeNotRegistredError } from "../Error/bike-not-registred-erro";
 import { CepNotRegistredError } from "../Error/cep-not-registred-error";
-import { BikeAlreadyRegisteredError } from "../Error/bike-already-registred-error";
-import { UserAlreadyRegisteredError } from "../Error/user-already-registred-error";
+import { BikeAlreadyRegisteredError } from "../Error/bike-already-registred-Error";
+import { UserAlreadyRegisteredError } from "../Error/user-already-registred-Error";
 
 export class App {
     public rents: Rent[] = []
@@ -23,14 +23,12 @@ export class App {
     //getUserByEmail  buscar um usuário pelo id
     getUserByEmail(email: string): User | undefined {
         const user= this.users.find((user) => user.email === email)
-        if(!user) throw new UserNotFindError()
         return user
     }
 
     //getBikeById  buscar uma bike pelo id
     getBikeById(id: string): Bike | undefined {
         const bike = this.bikes.find((bike) => bike.id === id)
-        if(!bike) throw new BikeNotFoundError()
         return bike
 
     }
