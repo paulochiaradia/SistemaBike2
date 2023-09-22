@@ -5,7 +5,7 @@ import { Crypt } from "./crypt";
 import { CepResponse, consultarCep } from "correios-brasil/dist";
 import { Location } from "./location";
 import { BikeNotFoundError } from "../Error/bike-not-found-error";
-import { UserNotFindError } from "../Error/user-not-found-error";
+import { UserNotFoundError } from "../Error/user-not-found-error";
 import { IncorrectPasswordError } from "../Error/incorrect-password-error";
 import { BikeNotAvailableError } from "../Error/bike-not-available-error";
 import { RentNotFindError } from "../Error/rent-not-found-error";
@@ -56,7 +56,7 @@ export class App {
                 throw new IncorrectPasswordError()
             }
         } else {
-            throw new UserNotFindError()
+            throw new UserNotFoundError()
         }
     }
 
@@ -79,7 +79,7 @@ export class App {
             const index = this.users.indexOf(user)
             this.users.splice(index, 1)
         } else {
-            throw new UserNotFindError()
+            throw new UserNotFoundError()
         }
     }
 
@@ -91,7 +91,7 @@ export class App {
             throw new BikeNotFoundError()
         }
         if(!user) {
-            throw new UserNotFindError()
+            throw new UserNotFoundError()
         }
         if (!bike.available) {
             throw new BikeNotAvailableError()
@@ -166,7 +166,7 @@ export class App {
             const cep1 = await findLocal(cep)
             bike.location = cep1
         } else {
-            throw new BikeNotFoundError
+            throw new BikeNotFoundError()
         }
     }
 

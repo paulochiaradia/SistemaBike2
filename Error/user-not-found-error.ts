@@ -1,5 +1,5 @@
-export class UserNotFindError extends Error {
-    public readonly name = "UserNotFindError"
+export class UserNotFoundError extends Error {
+    public readonly name = "UserNotFoundError"
     constructor() {
         super("User not Found.");
     }

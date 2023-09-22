@@ -21,8 +21,8 @@ const bike_not_available_error_1 = require("../Error/bike-not-available-error");
 const rent_not_found_error_1 = require("../Error/rent-not-found-error");
 const bike_not_registred_erro_1 = require("../Error/bike-not-registred-erro");
 const cep_not_registred_error_1 = require("../Error/cep-not-registred-error");
-const bike_already_registred_error_1 = require("../Error/bike-already-registred-error");
-const user_already_registred_error_1 = require("../Error/user-already-registred-error");
+const bike_already_registred_Error_1 = require("../Error/bike-already-registred-Error");
+const user_already_registred_Error_1 = require("../Error/user-already-registred-Error");
 class App {
     constructor() {
         this.rents = [];
@@ -33,15 +33,11 @@ class App {
     //getUserByEmail  buscar um usuário pelo id
     getUserByEmail(email) {
         const user = this.users.find((user) => user.email === email);
-        if (!user)
-            throw new user_not_found_error_1.UserNotFindError();
         return user;
     }
     //getBikeById  buscar uma bike pelo id
     getBikeById(id) {
         const bike = this.bikes.find((bike) => bike.id === id);
-        if (!bike)
-            throw new bike_not_found_error_1.BikeNotFoundError();
         return bike;
     }
     //registerUser  cadastrar um usuário
@@ -49,7 +45,7 @@ class App {
         return __awaiter(this, void 0, void 0, function* () {
             const existeUser = this.getUserByEmail(user.email);
             if (existeUser) {
-                throw new user_already_registred_error_1.UserAlreadyRegisteredError();
+                throw new user_already_registred_Error_1.UserAlreadyRegisteredError();
             }
             else {
                 const hashPassword = yield this.crypt.encrypt(user.password);
@@ -72,7 +68,7 @@ class App {
                 }
             }
             else {
-                throw new user_not_found_error_1.UserNotFindError();
+                throw new user_not_found_error_1.UserNotFoundError();
             }
         });
     }
@@ -81,7 +77,7 @@ class App {
         return __awaiter(this, void 0, void 0, function* () {
             const existeBike = this.getBikeById(bike.id);
             if (existeBike) {
-                throw new bike_already_registred_error_1.BikeAlreadyRegisteredError();
+                throw new bike_already_registred_Error_1.BikeAlreadyRegisteredError();
             }
             else {
                 const localidade = yield findLocal(cep);
@@ -98,7 +94,7 @@ class App {
             this.users.splice(index, 1);
         }
         else {
-            throw new user_not_found_error_1.UserNotFindError();
+            throw new user_not_found_error_1.UserNotFoundError();
         }
     }
     //rentBike  cadastrar um aluguel de bike
@@ -109,7 +105,7 @@ class App {
             throw new bike_not_found_error_1.BikeNotFoundError();
         }
         if (!user) {
-            throw new user_not_found_error_1.UserNotFindError();
+            throw new user_not_found_error_1.UserNotFoundError();
         }
         if (!bike.available) {
             throw new bike_not_available_error_1.BikeNotAvailableError();
@@ -182,7 +178,7 @@ class App {
                 bike.location = cep1;
             }
             else {
-                throw new bike_not_found_error_1.BikeNotFoundError;
+                throw new bike_not_found_error_1.BikeNotFoundError();
             }
         });
     }
