@@ -24,16 +24,12 @@ function main() {
         const user1 = user_1.User.create("Paulo", "paulo@gmail.com", "teste1");
         yield app.registerUser(user1);
         yield app.registerBike(bike1, "12120075");
-        app.getAllBikes();
         app.rentBike(bike1.id, user1.email);
+        console.log("-----------Alugado------------");
+        console.log(app.rents[0].bike);
         console.log(yield app.returnBike(bike1.id, user1.email, "12120091"));
-        app.getAllBikes();
-        yield app.atualizarEnderecoBike(bike1.id, "12125208");
-        console.log("------");
-        app.getAllBikes();
-        yield app.moveBikeTo(bike1.id, "12211902");
-        console.log("------_______----_______");
-        app.getAllBikes();
+        console.log("-----------Retornado------------");
+        console.log(app.rents[0].bike);
     });
 }
 main();

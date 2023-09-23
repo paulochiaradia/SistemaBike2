@@ -10,17 +10,13 @@ async function main() {
     const user1 = User.create("Paulo", "paulo@gmail.com", "teste1")
     await app.registerUser(user1)
     await app.registerBike(bike1, "12120075")
-    app.getAllBikes()
     app.rentBike(bike1.id, user1.email)
+    console.log("-----------Alugado------------")
+    console.log(app.rents[0].bike)
     console.log(await app.returnBike(bike1.id, user1.email, "12120091"))
-    app.getAllBikes()
-    await app.atualizarEnderecoBike(bike1.id, "12125208")
-    console.log("------")
-    app.getAllBikes()
-    await app.moveBikeTo(bike1.id, "12211902")
-    console.log("------_______----_______")
-    app.getAllBikes()
-}
+    console.log("-----------Retornado------------")
+    console.log(app.rents[0].bike)
+   }
 
 
 main()

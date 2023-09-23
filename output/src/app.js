@@ -130,7 +130,7 @@ class App {
                 const horas = diffHours(today, rent.start);
                 return (rent.bike.rate * horas);
             }
-            throw new rent_not_found_error_1.RentNotFindError();
+            throw new rent_not_found_error_1.RentNotFoundError();
         });
     }
     atualizarEnderecoBike(bikeId, cep) {

@@ -1,10 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.RentNotFindError = void 0;
-class RentNotFindError extends Error {
+exports.RentNotFoundError = void 0;
+class RentNotFoundError extends Error {
     constructor() {
-        super("Rent not find Error.");
-        this.name = "RentNotFindError";
+        super("Rent not found Error.");
+        this.name = "RentNotFoundError";
     }
 }
-exports.RentNotFindError = RentNotFindError;
+exports.RentNotFoundError = RentNotFoundError;

@@ -8,7 +8,7 @@ import { BikeNotFoundError } from "../Error/bike-not-found-error";
 import { UserNotFoundError } from "../Error/user-not-found-error";
 import { IncorrectPasswordError } from "../Error/incorrect-password-error";
 import { BikeNotAvailableError } from "../Error/bike-not-available-error";
-import { RentNotFindError } from "../Error/rent-not-found-error";
+import { RentNotFoundError } from "../Error/rent-not-found-error";
 import { BikeNotRegistredError } from "../Error/bike-not-registred-erro";
 import { CepNotRegistredError } from "../Error/cep-not-registred-error";
 import { BikeAlreadyRegisteredError } from "../Error/bike-already-registred-Error";
@@ -118,7 +118,7 @@ export class App {
             const horas = diffHours(today, rent.start)
             return(rent.bike.rate * horas)
         }
-        throw new RentNotFindError()
+        throw new RentNotFoundError()
     }
 
     async atualizarEnderecoBike(bikeId: string, cep: string): Promise<void> {
