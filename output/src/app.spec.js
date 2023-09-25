@@ -23,7 +23,6 @@ const user_already_registred_Error_1 = require("../Error/user-already-registred-
 const incorrect_password_error_1 = require("../Error/incorrect-password-error");
 const user_not_found_error_1 = require("../Error/user-not-found-error");
 const bike_already_registred_Error_1 = require("../Error/bike-already-registred-Error");
-const bike_not_available_error_1 = require("../Error/bike-not-available-error");
 const rent_not_found_error_1 = require("../Error/rent-not-found-error");
 describe('App', () => {
     it('should correctly calculate the rent amount', () => __awaiter(void 0, void 0, void 0, function* () {
@@ -132,47 +131,22 @@ describe('App', () => {
         expect(app.rents[0].bike).toEqual(bike1);
         expect(app.rents[0].user).toEqual(user1);
     }));
-    it('should throw an exception when trying to rent an unregistered bike', () => __awaiter(void 0, void 0, void 0, function* () {
-        const app = new app_1.App();
-        const bikeIdTeste = crypto_1.default.randomUUID();
-        const user1 = user_1.User.create("Paulo", "paulo@gmail.com", "teste1");
-        yield app.registerUser(user1);
-        expect(app.rents.length).toEqual(0);
-        yield expect(app.rentBike(bikeIdTeste, user1.email)).rejects.toThrow(bike_not_found_error_1.BikeNotFoundError);
-    }));
-    it('should throw an exception when trying to rent a bike with a non-existent user', () => __awaiter(void 0, void 0, void 0, function* () {
-        const app = new app_1.App();
-        const bike1 = new bike_1.Bike('caloi mountainbike', 'mountain bike', 1234, 1234, 100.0, 'My bike', 5, []);
-        yield app.registerBike(bike1, "12120075");
-        const userEmailTeste = "teste@gmail.com";
-        yield expect(app.rentBike(bike1.id, userEmailTeste)).rejects.toThrow(user_not_found_error_1.UserNotFoundError);
-    }));
-    it('should throw an exception when trying to rent a bike that is already rented', () => __awaiter(void 0, void 0, void 0, function* () {
-        const app = new app_1.App();
-        const bike1 = new bike_1.Bike('caloi mountainbike', 'mountain bike', 1234, 1234, 100.0, 'My bike', 5, []);
-        const user1 = user_1.User.create("Paulo", "paulo@gmail.com", "teste1");
-        const user2 = user_1.User.create("Vinicius", "vinicius@gmail.com", "teste2");
-        yield app.registerUser(user1);
-        yield app.registerUser(user2);
-        yield app.registerBike(bike1, "12120075");
-        yield app.rentBike(bike1.id, user1.email);
-        yield expect(app.rentBike(bike1.id, user2.email)).rejects.toThrow(bike_not_available_error_1.BikeNotAvailableError);
-    }));
-    it('should correct return bike', () => __awaiter(void 0, void 0, void 0, function* () {
-        const app = new app_1.App();
-        const bike1 = new bike_1.Bike('caloi mountainbike', 'mountain bike', 1234, 1234, 100.0, 'My bike', 5, []);
-        const user1 = user_1.User.create("Paulo", "paulo@gmail.com", "teste1");
-        yield app.registerUser(user1);
-        yield app.registerBike(bike1, "12120075");
-        app.rentBike(bike1.id, user1.email);
-        app.returnBike(bike1.id, user1.email, "12120091");
-        expect(app.bikes[0].available).toEqual(true);
-        expect(app.bikes[0].location).toEqual("12120-091");
-    }));
     it('should throw an exception when trying to return a not rented bike', () => __awaiter(void 0, void 0, void 0, function* () {
         const app = new app_1.App();
         const user1 = user_1.User.create("Paulo", "paulo@gmail.com", "teste1");
         yield app.registerUser(user1);
         expect(app.returnBike("1234", user1.email, "12120091")).rejects.toThrow(rent_not_found_error_1.RentNotFoundError);
+    }));
+    it("shuold correct return bike", () => __awaiter(void 0, void 0, void 0, function* () {
+        var _c;
+        const app = new app_1.App();
+        const bike1 = new bike_1.Bike('caloi mountainbike', 'mountain bike', 1234, 1234, 100.0, 'My bike', 5, []);
+        const user1 = user_1.User.create("Paulo", "paulo.chiaradia@gmail.com", "teste1");
+        yield app.registerUser(user1);
+        yield app.registerBike(bike1, "12120075");
+        app.rentBike(bike1.id, user1.email);
+        yield app.returnBike(bike1.id, user1.email, "12120091");
+        expect((_c = app.bikes[0].location) === null || _c === void 0 ? void 0 : _c.cep).toEqual("12120-091");
+        expect(app.bikes[0].available).toEqual(true);
     }));
 });

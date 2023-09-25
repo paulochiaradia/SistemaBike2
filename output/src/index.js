@@ -25,11 +25,8 @@ function main() {
         yield app.registerUser(user1);
         yield app.registerBike(bike1, "12120075");
         app.rentBike(bike1.id, user1.email);
-        console.log("-----------Alugado------------");
-        console.log(app.rents[0].bike);
-        console.log(yield app.returnBike(bike1.id, user1.email, "12120091"));
-        console.log("-----------Retornado------------");
-        console.log(app.rents[0].bike);
+        app.rentBike(bike1.id, user1.email);
+        app.getAllBikes();
     });
 }
 main();

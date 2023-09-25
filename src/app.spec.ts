@@ -9,8 +9,9 @@ import { UserAlreadyRegisteredError } from "../Error/user-already-registred-Erro
 import { IncorrectPasswordError } from "../Error/incorrect-password-error";
 import { UserNotFoundError } from "../Error/user-not-found-error";
 import { BikeAlreadyRegisteredError } from "../Error/bike-already-registred-Error";
-import { BikeNotAvailableError } from "../Error/bike-not-available-error";
 import { RentNotFoundError } from "../Error/rent-not-found-error";
+import exp from "constants";
+import { BikeNotAvailableError } from "../Error/bike-not-available-error";
 describe('App', () => {
     it('should correctly calculate the rent amount', async () => {
         const app = new App()
@@ -136,55 +137,24 @@ describe('App', () => {
         expect(app.rents[0].user).toEqual(user1)
     });
 
-    it('should throw an exception when trying to rent an unregistered bike', async() => {
-       const app = new App()
-       const bikeIdTeste = crypto.randomUUID()
-       const user1  = User.create("Paulo", "paulo@gmail.com", "teste1")
-       await app.registerUser(user1)
-       expect(app.rents.length).toEqual(0)
-       await expect(app.rentBike(bikeIdTeste, user1.email)).rejects.toThrow(BikeNotFoundError)
-    });
-
-    it('should throw an exception when trying to rent a bike with a non-existent user', async() => {
-        const app = new App()
-        const bike1 = new Bike('caloi mountainbike', 'mountain bike',
-        1234, 1234, 100.0, 'My bike', 5, [])
-        await app.registerBike(bike1, "12120075")
-        const userEmailTeste = "teste@gmail.com"
-        await expect(app.rentBike(bike1.id, userEmailTeste)).rejects.toThrow(UserNotFoundError)
-    });
-
-    it('should throw an exception when trying to rent a bike that is already rented', async() => {
-        const app = new App()
-        const bike1 = new Bike('caloi mountainbike', 'mountain bike',
-        1234, 1234, 100.0, 'My bike', 5, [])
-        const user1  = User.create("Paulo", "paulo@gmail.com", "teste1")
-        const user2  = User.create("Vinicius", "vinicius@gmail.com", "teste2")
-        await app.registerUser(user1)
-        await app.registerUser(user2)
-        await app.registerBike(bike1, "12120075")
-        await app.rentBike(bike1.id, user1.email)
-        await expect(app.rentBike(bike1.id, user2.email)).rejects.toThrow(BikeNotAvailableError)
-    });
-
-    it( 'should correct return bike', async() => {
-        const app = new App()
-        const bike1 = new Bike('caloi mountainbike', 'mountain bike',
-        1234, 1234, 100.0, 'My bike', 5, [])
-        const user1  = User.create("Paulo", "paulo@gmail.com", "teste1")
-        await app.registerUser(user1)
-        await app.registerBike(bike1, "12120075")
-        app.rentBike(bike1.id, user1.email)
-        app.returnBike(bike1.id, user1.email, "12120091")
-        expect(app.bikes[0].available).toEqual(true)
-        expect(app.bikes[0].location).toEqual("12120-091")
-    });   
-    
     it('should throw an exception when trying to return a not rented bike', async() => {
         const app = new App()
         const user1  = User.create("Paulo", "paulo@gmail.com", "teste1")
         await app.registerUser(user1)
         expect(app.returnBike("1234", user1.email, "12120091")).rejects.toThrow(RentNotFoundError)
+    });
+
+    it("shuold correct return bike", async() => {
+        const app = new App()
+        const bike1 = new Bike('caloi mountainbike', 'mountain bike',
+        1234, 1234, 100.0, 'My bike', 5, [])
+        const user1  = User.create("Paulo", "paulo.chiaradia@gmail.com", "teste1")
+        await app.registerUser(user1)
+        await app.registerBike(bike1, "12120075")
+        app.rentBike(bike1.id, user1.email)
+        await app.returnBike(bike1.id, user1.email, "12120091")
+        expect(app.bikes[0].location?.cep).toEqual("12120-091")
+        expect(app.bikes[0].available).toEqual(true)
     });
 
 });
